@@ -1,8 +1,6 @@
 const app = document.getElementById("app");
 const creepyBtn = document.querySelector(".creepy__btn");
 
-//ztobic random afeter
-
 //after - next page
 //limit - limit results
 // https://www.reddit.com/r/creepy.json?after=t3_dkee20&limit=5
@@ -16,43 +14,30 @@ function showMoreBtn() {
     app.innerHTML = "";
     initApp();
   });
-  document.body.appendChild(btn);
+  app.appendChild(btn);
 }
 
 // fetchRedditData();
 
 async function fetchRedditData() {
-  const res = await fetch(
-    "https://www.reddit.com/r/creepy.json?after=t3_dc3pcp&limit=50"
-  );
-  const { data } = await res.json();
-  //   console.log(data.children);
-  return data.children;
+  const res = await fetch("https://www.reddit.com/r/creepy/random.json");
+  const data = await res.json();
+
+  return data[0].data.children[0].data;
 }
 
 //get image and title from data
 async function getTitleAndImg() {
-  const match = /.(jpg)$/;
+  const match = /.(jpg|gif)$/;
   const data = await fetchRedditData();
 
   //check if there is img and return img and title
-  const arr = data.map(el => {
-    if (match.test(el.data.url)) {
-      return {
-        title: el.data.title,
-        img: el.data.url
-      };
-    }
-  });
-
-  //remove undefined values
-  const result = arr.filter(el => {
-    if (el != "undefined") {
-      return el;
-    }
-  });
-
-  return result;
+  return {
+    title: data.title,
+    img: match.test(data.url)
+      ? data.url
+      : "https://images.pexels.com/photos/1480861/pexels-photo-1480861.jpeg?cs=srgb&dl=calendar-carved-carving-1480861.jpg&fm=jpg"
+  };
 }
 
 function createHtmlElement(tag) {
@@ -68,24 +53,21 @@ async function initApp() {
   creepyBtn.parentElement.remove();
 
   const data = await getTitleAndImg();
-  console.log(data);
 
-  data.forEach(el => {
-    const box = createHtmlElement("div");
-    const img = createHtmlElement("img");
-    const title = createHtmlElement("h2");
+  const box = createHtmlElement("div");
+  const img = createHtmlElement("img");
+  const title = createHtmlElement("h2");
 
-    box.classList.add("creepy-box");
-    img.classList.add("creepy-box__img");
-    title.classList.add("creepy-box__title");
+  box.classList.add("creepy-box");
+  img.classList.add("creepy-box__img");
+  title.classList.add("creepy-box__title");
 
-    img.setAttribute("src", el.img);
-    title.textContent = el.title;
-    box.appendChild(img);
-    box.appendChild(title);
+  img.setAttribute("src", data.img);
+  title.textContent = data.title;
+  box.appendChild(img);
+  box.appendChild(title);
 
-    appendHtmlElementsToApp(box);
-  });
+  appendHtmlElementsToApp(box);
 
   showMoreBtn();
 }
