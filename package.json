@@ -1,0 +1,22 @@
+{
+  "name": "redditapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "gh-pages -d ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Krystian93/CreepyJson.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Krystian93/CreepyJson/issues"
+  },
+  "homepage": "https://github.com/Krystian93/CreepyJson#readme",
+  "dependencies": {
+    "gh-pages": "^2.1.1"
+  }
+}
